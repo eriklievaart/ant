@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tasks">
+
+	<import file="${source.ant.macros.file}" />
+
+	<target name="task-clean">
+		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="false" />
+	</target>
+
+	<target name="task-osgi-clean">
+		<delete includeemptydirs="false" failonerror="false">
+			<fileset dir="${osgi.deploy.dir}">
+				<include name="${project.name}-*.jar" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="task-init">
+		<available file="${source.root.dir}" property="git.exists" />
+		<fail unless="git.exists" message="Git dir not found, is project name correct? ${project.name}" />
+
+		<mkdir dir="${backup.project.dir}" />
+		<mkdir dir="${buildnumber.dir}" />
+		<mkdir dir="${source.main.java.dir}" />
+		<mkdir dir="${source.main.run.dir}" />
+		<mkdir dir="${source.main.config.dir}" />
+		<mkdir dir="${source.main.zip.dir}" />
+		<mkdir dir="${source.main.manifest.dir}" />
+		<mkdir dir="${source.main.resource.dir}" />
+		<mkdir dir="${source.test.java.dir}" />
+		<mkdir dir="${source.test.run.dir}" />
+		<mkdir dir="${source.test.resource.dir}" />
+		<mkdir dir="${project.lib.run.dir}" />
+		<mkdir dir="${project.lib.compile.dir}" />
+		<mkdir dir="${project.lib.bundle.dir}" />
+		<mkdir dir="${project.lib.provided.dir}" />
+		<mkdir dir="${project.lib.test.dir}" />
+		<mkdir dir="${project.lib.test.dir}" />
+		<mkdir dir="${build.generated.dir}" />
+		<mkdir dir="${build.test.classes.dir}" />
+		<!--
+		<mkdir dir="${}" />
+		-->
+	</target>
+
+	<target name="task-track-buildnr">
+		<touch file="${build.version.file}" />
+		<propertyfile file="${build.version.file}" comment="Build Number">
+			<entry key="build.number" type="int" operation="+" default="1" />
+		</propertyfile>
+		<property file="${build.version.file}" />
+		<echo>Build:${build.number}</echo>
+	</target>
+
+	<target name="task-preprocess" unless="${skip.preprocess}">
+		<ws main="com.eriklievaart.ws.boot.PreProcess">
+			<arguments>
+				<arg file="${source.main.java.dir}" />
+				<arg file="${source.test.java.dir}" />
+			</arguments>
+		</ws>
+	</target>
+
+	<target name="task-resolve" unless="${skip.resolve}">
+		<echo level="verbose">dependencies.txt: ${source.dependencies.file}</echo>
+		<echo level="verbose">repo: ${dependencies.repo.dir}</echo>
+		<ws main="com.eriklievaart.ws.boot.ResolveProject">
+			<arguments>
+				<arg value="${project.name}" />
+			</arguments>
+		</ws>
+	</target>
+
+	<target name="task-install">
+		<fail unless="enable.install" />
+		<ws main="com.eriklievaart.ws.boot.Snapshot">
+			<arguments>
+				<arg value="${build.jar.file}" />
+			</arguments>
+		</ws>
+	</target>
+
+	<target name="task-javacc" if="source.javacc.package.dir">
+		<property name="javacc.output" value="${source.main.java.dir}/${source.javacc.package.dir}" />
+		<require file="${source.main.javacc.file}" />
+		<delete dir="${javacc.output}" verbose="true" />
+		<mkdir dir="${javacc.output}" />
+		<echo>Running javacc ${source.main.javacc.file} in ${javacc.output}</echo>
+		<javacc target="${source.main.javacc.file}" outputdirectory="${javacc.output}" javacchome="${project.lib.compile.dir}" buildparser="true" buildtokenmanager="true" static="false" />
+	</target>
+
+	<target name="task-main-compile">
+		<compile source="${source.main.java.dir}" classes="${build.main.classes.dir}" path="${toString:main.compile.path}" />
+	</target>
+
+	<target name="task-test-compile">
+		<compile source="${source.test.java.dir}" classes="${build.test.classes.dir}" path="${toString:test.compile.path}" />
+	</target>
+
+	<target name="task-main-resources">
+		<fail unless="build.main.classes.dir" />
+		<fail unless="source.main.resource.dir" />
+		<copy todir="${build.main.classes.dir}" verbose="true">
+			<fileset dir="${source.main.resource.dir}" />
+		</copy>
+		<copy todir="${build.zip.dir}" verbose="true">
+			<fileset dir="${source.main.zip.dir}" />
+		</copy>
+		<copy todir="${build.main.run.dir}">
+			<fileset dir="${source.main.run.dir}" />
+		</copy>
+		<copy todir="${build.manifest.dir}">
+			<fileset dir="${source.main.manifest.dir}" />
+		</copy>
+	</target>
+
+	<target name="task-test-resources">
+		<fail unless="build.main.classes.dir" />
+		<fail unless="source.test.resource.dir" />
+		<copy todir="${build.test.classes.dir}" verbose="true">
+			<fileset dir="${source.main.resource.dir}" />
+		</copy>
+		<copy todir="${build.test.classes.dir}" verbose="true">
+			<fileset dir="${source.test.resource.dir}" />
+		</copy>
+		<copy todir="${build.test.run.dir}">
+			<fileset dir="${source.test.run.dir}" />
+		</copy>
+	</target>
+
+	<target name="task-unit-tests" unless="skip.test">
+		<test includes="**/*U.class" />
+	</target>
+
+	<target name="task-integration-tests" unless="skip.test">
+		<test includes="**/*I.class" />
+	</target>
+
+	<target name="task-checkstyle" unless="skip.checkstyle">
+		<echo level="info">config: ${tool.checkstyle.config.file}</echo>
+		<echo level="info">executable: ${tool.checkstyle.jar}</echo>
+		<property name="location" location="${tool.checkstyle.config.file}" />
+
+		<taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${tool.checkstyle.jar}" />
+		<checkstyle config="${location}" classpath="tool.checkstyle.jar">
+			<fileset dir="${source.main.java.dir}" includes="**/*.java" />
+		</checkstyle>
+	</target>
+
+	<target name="task-backup-property">
+		<tstamp>
+			<format property="DSTAMP" pattern="yyyy-MM-dd" />
+		</tstamp>
+		<echo>Date: ${DSTAMP}</echo>
+		<property name="pack.backup.file" location="${backup.project.dir}/${project.name}-${DSTAMP}.zip" />
+		<echo level="info">backup: ${pack.backup.file}</echo>
+		<available file="${pack.backup.file}" type="file" property="skip.backup" />
+	</target>
+	<target name="task-daily-backup" unless="skip.backup" depends="task-backup-property">
+		<delete file="${pack.backup.file}" />
+		<zip destfile="${pack.backup.file}">
+			<fileset dir="${source.root.dir}" />
+		</zip>
+	</target>
+
+	<target name="task-jar">
+		<fail unless="enable.jar" />
+		<tstamp>
+			<format property="DATENOW" pattern="yyyy-MM-dd @ HH:mm:ss" />
+		</tstamp>
+		<echo>packing jar out of ${build.main.classes.dir}</echo>
+
+		<!-- override this property in ant.properties if using a different main class -->
+		<property name="project.main" value="${project.default.main}" />
+
+		<jar destfile="${build.jar.file}" basedir="${build.main.classes.dir}">
+			<manifest>
+				<attribute name="Build-Date" value="${DATENOW}" />
+				<attribute name="Build-Number" value="${build.number}" />
+				<attribute name="Main-Class" value="${project.main}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="task-source-jar">
+		<fail unless="enable.jar" />
+		<echo>packing jar out of ${source.main.java.dir}</echo>
+		<jar destfile="${build.src.jar.file}">
+			<fileset dir="${source.main.java.dir}" />
+			<fileset dir="${source.main.resource.dir}" />
+		</jar>
+	</target>
+
+	<target name="task-deploy-jar">
+		<fail unless="${enable.application}" message="Project ${project.name} not configured as application! (property 'enable.application' not set)" />
+		<require file="${build.jar.file}" message="jar file not found: ${build.jar.file}, did you build the project?" />
+
+		<echo>deploying to: ${deploy.local.project.dir}</echo>
+		<copy todir="${deploy.local.project.dir}" verbose="true">
+			<fileset file="${build.jar.file}" />
+		</copy>
+		<copy todir="${deploy.local.lib.dir}" verbose="true">
+			<fileset dir="${project.lib.compile.dir}" />
+			<fileset dir="${project.lib.run.dir}" />
+		</copy>
+		<!-- remove lib dir if there are no jars -->
+		<delete dir="${deploy.local.lib.dir}" excludes="**/*.jar" includeemptydirs="true" />
+	</target>
+
+	<target name="task-deploy-script">
+		<property name="project.main" value="${project.default.main}" />
+		<copy tofile="${deploy.local.script.file}" overwrite="true">
+			<fileset file="${source.ant.script.file}" />
+		</copy>
+		<echo>main method: ${project.main}</echo>
+		<replace file="${deploy.local.script.file}" token="@project@" value="${project.name}">
+			<replacefilter token="@project@" value="${project.name}" />
+			<replacefilter token="@main.class@" value="${project.main}" />
+		</replace>
+		<chmod file="${deploy.local.script.file}" perm="+x" />
+	</target>
+
+	<target name="task-generate" if="generator.class">
+		<run main="${generator.class}">
+			<java-children>
+				<classpath refid="test.run.path" />
+			</java-children>
+		</run>
+	</target>
+
+	<target name="task-run">
+		<property name="project.main" value="${project.default.main}" />
+		<run>
+			<java-children>
+				<classpath refid="main.run.path" />
+			</java-children>
+		</run>
+	</target>
+
+	<target name="task-run-jar">
+		<delete dir="${build.main.classes.dir}" />
+		<run>
+			<java-children>
+				<classpath>
+					<pathelement location="${build.jar.file}" />
+					<path refid="main.compile.path" />
+				</classpath>
+			</java-children>
+		</run>
+	</target>
+
+	<target name="task-war">
+		<fail unless="enable.war" />
+
+		<property name="build.main.classes.includes" value="**" />
+
+		<echo>classes ${build.main.classes.dir} excludes ${build.classes.excludes}</echo>
+		<echo>libs ${project.lib.compile.dir}</echo>
+		<echo>libs ${project.lib.run.dir}</echo>
+
+		<war destfile="${build.war.file}" webxml="${source.webxml.file}" compress="true" excludes="manifest.txt">
+			<lib dir="${project.lib.compile.dir}" />
+			<lib dir="${project.lib.run.dir}" />
+			<classes dir="${build.main.classes.dir}" includes="${build.main.classes.includes}" excludes="${build.main.classes.excludes}" />
+			<fileset dir="${source.main.webapp.dir}" />
+			<fileset dir="${build.generated.dir}" />
+		</war>
+	</target>
+
+	<target name="task-war-static">
+		<property name="destination" location="${webserver.webapp.dir}/ROOT/static" />
+		<echo>copying to static: ${destination}</echo>
+		<copy todir="${destination}" overwrite="true" verbose="true">
+			<fileset dir="${source.main.webapp.dir}/static" />
+		</copy>
+	</target>
+
+	<target name="task-deploy-war">
+		<require file="${webserver.webapp.dir}" />
+		<require file="${build.war.file}" />
+		<copy file="${build.war.file}" tofile="${webserver.webapp.dir}/ROOT.war" verbose="true" overwrite="true" />
+		<copy file="${build.war.file}" tofile="/tmp/ROOT.war" verbose="true" />
+	</target>
+
+	<target name="task-osgi-manifest">
+		<ws main="com.eriklievaart.ws.boot.Manifest">
+			<arguments>
+				<arg value="${project.name}" />
+			</arguments>
+		</ws>
+	</target>
+
+	<target name="task-osgi-bundle">
+		<fail unless="enable.osgi" />
+		<fail unless="bundle.name" />
+		<tstamp>
+			<format property="DATENOW" pattern="yyyy-MM-dd @ HH:mm:ss" />
+		</tstamp>
+		<property name="full.name" value="${project.name}-${bundle.name}" />
+		<echo>building bundle ${project.name}-${bundle.name}</echo>
+		<property name="subpackage" value="${source.main.pkg}.${bundle.name}" />
+		<property name="activator" value="${subpackage}.Activator" />
+		<tokens property="subdir" in="subpackage" replace="." with="/" />
+		<property name="jar" value="${build.bundle.dir}/${full.name}.jar" />
+		<property name="manifest" value="${build.manifest.dir}/${full.name}.txt" />
+
+		<echo>packing osgi bundle out of [${build.main.classes.dir}] includes [${subdir}]</echo>
+		<jar destfile="${jar}" manifest="${manifest}">
+			<manifest>
+				<attribute name="Build-Date" value="${DATENOW}" />
+				<attribute name="Build-Number" value="${build.number}" />
+				<attribute name="Bundle-Name" value="${full.name}" />
+				<attribute name="Bundle-SymbolicName" value="com.eriklievaart.${project.name}.${bundle.name}" />
+				<attribute name="Bundle-Version" value="1.0.0" />
+			</manifest>
+			<fileset dir="${build.main.classes.dir}">
+				<include name="${subdir}/**" />
+			</fileset>
+			<fileset dir="${source.main.resource.dir}">
+				<include name="${bundle.name}/**" />
+			</fileset>
+			<zipgroupfileset dir="${project.lib.compile.dir}" includes="*.jar" />
+		</jar>
+
+		<property name="src.jar" value="${build.bundle.dir}/${full.name}-src.jar" />
+		<jar destfile="${src.jar}">
+			<fileset dir="${source.main.java.dir}">
+				<include name="${subdir}/**" />
+			</fileset>
+			<fileset dir="${source.main.resource.dir}">
+				<include name="${bundle.name}/**" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="task-osgi-bundles">
+		<fail unless="enable.osgi" />
+		<script language="javascript">
+			<![CDATA[
+				var path = project.getProperty('source.main.pkg.dir');
+				var dir = new java.io.File(path);
+				java.lang.System.out.println("package root = " + dir);
+				var children = dir.listFiles();
+
+				for(i=0; i<children.length; i++) {
+					var child = children[i];
+			
+					if(child.isDirectory()) {
+						var t = project.createTask("antcall");
+					    t.setTarget("task-osgi-bundle");
+			
+					    var p = t.createParam();
+					    p.setName("bundle.name");
+					    p.setValue(child.getName());
+					    t.perform();
+					}
+			    }
+			]]>
+		</script>
+	</target>
+
+	<target name="task-osgi-install">
+		<fail unless="enable.install" />
+		<fail unless="enable.osgi" />
+		<ws main="com.eriklievaart.ws.boot.Snapshot">
+			<arguments>
+				<arg value="${build.bundle.dir}" />
+			</arguments>
+		</ws>
+	</target>
+
+	<target name="task-osgi-tmp">
+		<fail unless="enable.osgi" message="Project ${project.name} not configured as osgi project! (property 'enable.application' not set)" />
+		<echo>deploying from ${build.zip.dir} to: ${osgi.deploy.dir}</echo>
+		<copy todir="${osgi.tmp.dir}" verbose="true">
+			<fileset dir="${build.zip.dir}" />
+		</copy>
+	</target>
+
+	<target name="task-osgi-deploy">
+		<fail unless="enable.application" message="Project ${project.name} not configured as application! (property 'enable.application' not set)" />
+		<fail unless="enable.osgi" message="Project ${project.name} not configured as osgi project! (property 'enable.application' not set)" />
+		<echo>deploying from ${build.zip.dir} to: ${deploy.local.project.dir}</echo>
+
+		<copy todir="${deploy.local.project.dir}" verbose="true">
+			<fileset dir="${build.zip.dir}" excludes="**/*-src.jar" />
+		</copy>
+		<copy todir="${deploy.local.bundle.dir}" verbose="true">
+			<fileset dir="${project.lib.compile.dir}" />
+			<fileset dir="${project.lib.bundle.dir}" />
+		</copy>
+	</target>
+
+	<target name="task-osgi-start">
+		<fail message="Felix already running">
+			<condition>
+				<available file="${osgi.pid}" />
+			</condition>
+		</fail>
+		<mkdir dir="${osgi.deploy.dir}" />
+		<mkdir dir="${osgi.tmp.dir}" />
+		<touch file="${osgi.pid}" />
+		<echo>Starting felix ${osgi.jar}</echo>
+		<java jar="${osgi.jar}" fork="true" failonerror="true">
+			<arg value="-b" />
+			<arg value="${osgi.deploy.dir}" />
+		</java>
+	</target>
+
+	<target name="task-osgi-stop">
+		<exec executable="/usr/bin/pkill">
+			<arg value="-f" />
+			<arg value="${osgi.jar}" />
+		</exec>
+		<delete file="${osgi.pid}" />
+	</target>
+
+	<target name="task-webserver-start">
+		<condition property="webserver.online">
+			<socket server="localhost" port="${webserver.port}" />
+		</condition>
+		<fail if="webserver.online" message="port ${webserver.port} already taken! Is the webserver already running?" />
+		<require file="${webserver.bin.dir}" />
+		<echo>tomcat dir: ${webserver.dir}</echo>
+		<exec executable="${webserver.bin.dir}/startup.sh" spawn="false" />
+	</target>
+
+	<target name="task-webserver-stop">
+		<require file="${webserver.bin.dir}" />
+		<exec executable="${webserver.bin.dir}/shutdown.sh" spawn="false" />
+		<exec executable="/usr/bin/pkill">
+			<arg value="-f" />
+			<arg value="${webserver.dir}" />
+		</exec>
+	</target>
+
+</project>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="macros">
+
+	<macrodef name="require">
+		<attribute name="file" />
+		<attribute name="message" default="Error! file does not exist: @{file}" />
+		<sequential>
+			<fail message="@{message}">
+				<condition>
+					<not>
+						<available file="@{file}" />
+					</not>
+				</condition>
+			</fail>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="tokens">
+		<attribute name="property" />
+		<attribute name="in" />
+		<attribute name="replace" />
+		<attribute name="with" />
+		<sequential>
+			<loadresource property="@{property}">
+				<propertyresource name="@{in}" />
+				<filterchain>
+					<tokenfilter>
+						<filetokenizer />
+						<replacestring from="@{replace}" to="@{with}" />
+					</tokenfilter>
+				</filterchain>
+			</loadresource>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="ws">
+		<attribute name="main" />
+		<element name="arguments" />
+		<sequential>
+			<echo level="info">executable: ${tool.dependencies.jar}</echo>
+			<echo>main: @{main}</echo>
+
+			<require file="${tool.dependencies.jar}" />
+
+			<java classname="@{main}" fork="yes" failonerror="true" classpath="${tool.dependencies.jar}">
+				<arguments />
+			</java>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="compile">
+		<attribute name="source" />
+		<attribute name="classes" />
+		<attribute name="path" />
+		<sequential>
+			<property name="compile.java.version" value="8" />
+
+			<echo level="info">Compiling: @{source} to @{classes}</echo>
+			<echo level="info">Path: @{path}</echo>
+			<echo level="info">java version ${compile.java.version}</echo>
+
+			<mkdir dir="${build.main.classes.dir}" />
+			<javac srcdir="@{source}" includes="**/*.java" destdir="@{classes}" source="${compile.java.version}" target="${compile.java.version}" debug="true" debuglevel="lines,vars,source" includeantruntime="false" fork="false">
+				<classpath path="@{path}" />
+			</javac>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="run-sys">
+		<sequential>
+			<echo message="macro run-sys: making properties available for passing run.sys.* to application" />
+			<propertyset id="run.sys">
+				<propertyref prefix="source" />
+				<propertyref prefix="build" />
+			</propertyset>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="run">
+		<attribute name="main" default="${project.main}" />
+		<element name="java-children" />
+		<sequential>
+			<run-sys />
+			<echo>Classpath: ${toString:main.run.path}</echo>
+			<echo>running @{main} in: ${build.main.run.dir}</echo>
+			<java classname="@{main}" fork="yes" dir="${build.main.run.dir}" failonerror="true">
+				<jvmarg value="-enableassertions" />
+				<syspropertyset refid="run.sys" />
+				<java-children />
+			</java>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="test">
+		<attribute name="includes" />
+		<sequential>
+			<echo level="info">Running tests "@{includes}" in ${build.test.classes.dir}</echo>
+			<echo level="info">Output ${build.test.output.dir}</echo>
+			<echo level="info">Test classpath: ${toString:test.run.path}</echo>
+			<delete dir="${build.test.output.dir}" />
+			<mkdir dir="${build.test.output.dir}" />
+
+			<run-sys />
+			<pathconvert property="testoutput" refid="test.run.path" />
+			<echo>Path2 = ${testoutput}</echo>
+
+			<junit printsummary="off" fork="true" haltonfailure="yes" tempdir="${build.test.output.dir}" filtertrace="true" newenvironment="false" maxmemory="1024m" dir="${build.test.run.dir}">
+				<syspropertyset refid="run.sys" />
+				<classpath refid="test.run.path" />
+				<formatter type="plain" usefile="false" />
+				<batchtest>
+					<fileset dir="${build.test.classes.dir}" excludes="**/*$*.class" includes="@{includes}" />
+				</batchtest>
+				<sysproperty key="application.test.mode" value="true" />
+				<jvmarg value="-enableassertions" />
+			</junit>
+
+		</sequential>
+	</macrodef>
+
+</project>

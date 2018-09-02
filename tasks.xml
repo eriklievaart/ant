@@ -218,6 +218,9 @@
 			<replacefilter token="@main.class@" value="${project.main}" />
 		</replace>
 		<chmod file="${deploy.local.script.file}" perm="+x" />
+		<copy todir="${deploy.local.project.dir}" verbose="true">
+			<fileset dir="${build.zip.dir}" />
+		</copy>
 	</target>
 
 	<target name="task-generate" if="generator.class">
@@ -371,7 +374,7 @@
 
 	<target name="task-osgi-tmp">
 		<fail unless="enable.osgi" message="Project ${project.name} not configured as osgi project! (property 'enable.application' not set)" />
-		<echo>deploying from ${build.zip.dir} to: ${osgi.deploy.dir}</echo>
+		<echo>deploying from ${build.zip.dir} to: ${osgi.tmp.dir}</echo>
 		<copy todir="${osgi.tmp.dir}" verbose="true">
 			<fileset dir="${build.zip.dir}" />
 		</copy>

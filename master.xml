@@ -34,7 +34,6 @@
 		<fileset file="${testrunner.jar.file}" />
 	</path>
 
-
 	<target name="master-clean" depends="task-clean" />
 	<target name="master-resolve" depends="task-resolve" />
 	<target name="master-main-compile" depends="task-init, task-resolve, task-main-resources, task-javacc, task-main-compile"/>

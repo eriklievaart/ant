@@ -223,7 +223,7 @@
 		</copy>
 	</target>
 
-	<target name="task-generate" if="generator.class">
+	<target name="task-generate" if="generator.class" unless="skip.generate">
 		<run main="${generator.class}">
 			<java-children>
 				<classpath refid="test.run.path" />

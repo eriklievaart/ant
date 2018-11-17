@@ -7,14 +7,6 @@
 		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="false" />
 	</target>
 
-	<target name="task-osgi-clean">
-		<delete includeemptydirs="false" failonerror="false">
-			<fileset dir="${osgi.deploy.dir}">
-				<include name="${project.name}-*.jar" />
-			</fileset>
-		</delete>
-	</target>
-
 	<target name="task-init">
 		<available file="${source.root.dir}" property="git.exists" />
 		<fail unless="git.exists" message="Git dir not found, is project name correct? ${project.name}" />
@@ -345,19 +337,22 @@
 				java.lang.System.out.println("package root = " + dir);
 				var children = dir.listFiles();
 
+				if(children === null) {
+					children = []; // fix: project doesn't have source code, just bundles
+				}
 				for(i=0; i<children.length; i++) {
 					var child = children[i];
-			
+		
 					if(child.isDirectory()) {
-						var t = project.createTask("antcall");
+					var t = project.createTask("antcall");
 					    t.setTarget("task-osgi-bundle");
-			
+		
 					    var p = t.createParam();
 					    p.setName("bundle.name");
 					    p.setValue(child.getName());
 					    t.perform();
 					}
-			    }
+			    	}
 			]]>
 		</script>
 	</target>
@@ -376,7 +371,10 @@
 		<fail unless="enable.osgi" message="Project ${project.name} not configured as osgi project! (property 'enable.application' not set)" />
 		<echo>deploying from ${build.zip.dir} to: ${osgi.tmp.dir}</echo>
 		<copy todir="${osgi.tmp.dir}" verbose="true">
-			<fileset dir="${build.zip.dir}" />
+			<fileset dir="${build.zip.dir}" excludes="**/*-src.jar"/>
+		</copy>
+		<copy todir="${osgi.tmp.bundle.dir}" verbose="true">
+			<fileset dir="${project.lib.bundle.dir}" />
 		</copy>
 	</target>
 

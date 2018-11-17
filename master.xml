@@ -52,7 +52,7 @@
 	<target name="master-war" depends="master-build, task-war" />
 	<target name="master-war-deploy" depends="master-war, task-deploy-war" />
 
-	<target name="master-osgi-bundles" depends="task-osgi-clean, master-build, task-track-buildnr, task-osgi-manifest, task-osgi-bundles" />
+	<target name="master-osgi-bundles" depends="task-clean, master-build, task-track-buildnr, task-osgi-manifest, task-osgi-bundles" />
 	<target name="master-osgi-install" depends="master-osgi-bundles, task-osgi-install" />
 	<target name="master-osgi-tmp" depends="master-osgi-bundles, task-osgi-tmp" />
 	<target name="master-osgi-deploy" depends="master-osgi-bundles, task-osgi-deploy" />

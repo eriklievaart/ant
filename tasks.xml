@@ -295,7 +295,7 @@
 		<echo>building bundle ${project.name}-${bundle.name}</echo>
 		<property name="subpackage" value="${source.main.pkg}.${bundle.name}" />
 		<property name="activator" value="${subpackage}.Activator" />
-		<tokens property="subdir" in="subpackage" replace="." with="/" />
+		<tokenreplace property="subdir" in="subpackage" replace="." with="/" />
 		<property name="jar" value="${build.bundle.dir}/${full.name}.jar" />
 		<property name="manifest" value="${build.manifest.dir}/${full.name}.txt" />
 

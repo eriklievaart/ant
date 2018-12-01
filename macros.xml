@@ -15,7 +15,7 @@
 		</sequential>
 	</macrodef>
 
-	<macrodef name="tokens">
+	<macrodef name="tokenreplace">
 		<attribute name="property" />
 		<attribute name="in" />
 		<attribute name="replace" />

@@ -314,6 +314,9 @@
 			<fileset dir="${source.main.resource.dir}">
 				<include name="${bundle.name}/**" />
 			</fileset>
+			<fileset dir="${build.generated.dir}">
+				<include name="${bundle.name}/**" />
+			</fileset>
 			<zipgroupfileset dir="${project.lib.compile.dir}" includes="*.jar" />
 		</jar>
 

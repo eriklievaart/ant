@@ -78,6 +78,9 @@
 		<delete dir="${javacc.output}" verbose="true" />
 		<mkdir dir="${javacc.output}" />
 		<echo>Running javacc ${source.main.javacc.file} in ${javacc.output}</echo>
+        <copy tofile="${project.lib.compile.dir}/javacc.jar">
+            <fileset dir="${project.lib.compile.dir}" includes="javacc-*.jar" />
+        </copy>
 		<javacc target="${source.main.javacc.file}" outputdirectory="${javacc.output}" javacchome="${project.lib.compile.dir}" buildparser="true" buildtokenmanager="true" static="false" />
 	</target>
 

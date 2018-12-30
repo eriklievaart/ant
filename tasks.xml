@@ -35,6 +35,16 @@
 		-->
 	</target>
 
+	<target name="task-test-init">
+        <script language="javascript">
+            tests = new java.io.File(project.getProperty("source.test.java.dir"));
+            if (tests.list().length == 0) {
+                java.lang.System.out.println('no tests: skip.test=true');
+                project.setProperty("skip.test", true);
+            }
+        </script>
+	</target>
+
 	<target name="task-track-buildnr">
 		<touch file="${build.version.file}" />
 		<propertyfile file="${build.version.file}" comment="Build Number">
@@ -109,7 +119,7 @@
 		</copy>
 	</target>
 
-	<target name="task-test-resources">
+	<target name="task-test-resources" unless="skip.test">
 		<fail unless="build.main.classes.dir" />
 		<fail unless="source.test.resource.dir" />
 		<copy todir="${build.test.classes.dir}" verbose="true">

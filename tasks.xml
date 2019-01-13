@@ -98,7 +98,7 @@
 		<compile source="${source.main.java.dir}" classes="${build.main.classes.dir}" path="${toString:main.compile.path}" />
 	</target>
 
-	<target name="task-test-compile" unless="skip.test">
+	<target name="task-test-compile">
 		<compile source="${source.test.java.dir}" classes="${build.test.classes.dir}" path="${toString:test.compile.path}" />
 	</target>
 
@@ -119,7 +119,7 @@
 		</copy>
 	</target>
 
-	<target name="task-test-resources" unless="skip.test">
+	<target name="task-test-resources">
 		<fail unless="build.main.classes.dir" />
 		<fail unless="source.test.resource.dir" />
 		<copy todir="${build.test.classes.dir}" verbose="true">

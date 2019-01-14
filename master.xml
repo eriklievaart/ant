@@ -36,11 +36,11 @@
 
 	<target name="master-clean" depends="task-clean" />
 	<target name="master-resolve" depends="task-resolve" />
-	<target name="master-main-compile" depends="task-init, task-resolve, task-main-resources, task-javacc, task-main-compile"/>
+	<target name="master-main-compile" depends="task-init, task-resolve, task-preprocess, task-main-resources, task-javacc, task-main-compile"/>
 	<target name="master-test-compile" depends="master-main-compile, task-test-compile" unless="skip.test" />
 	<target name="master-unit" depends="master-test-compile, task-test-init, task-test-resources, task-unit-tests" unless="skip.test"/>
 	<target name="master-integration" depends="master-unit, task-integration-tests" unless="skip.test"/>
-	<target name="master-validate" depends="master-integration, task-preprocess, task-checkstyle, task-daily-backup" description="validate" />
+	<target name="master-validate" depends="master-integration, task-checkstyle, task-daily-backup" description="validate" />
 	<target name="master-build" depends="task-clean, master-validate, task-generate" />
 
 	<target name="master-jar" depends="master-build, task-track-buildnr, task-jar, task-source-jar" />

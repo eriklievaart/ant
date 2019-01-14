@@ -57,8 +57,7 @@
 	<target name="task-preprocess" unless="${skip.preprocess}">
 		<ws main="com.eriklievaart.ws.boot.PreProcess">
 			<arguments>
-				<arg file="${source.main.java.dir}" />
-				<arg file="${source.test.java.dir}" />
+				<arg file="${source.root.dir}" />
 			</arguments>
 		</ws>
 	</target>

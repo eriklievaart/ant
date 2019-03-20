@@ -7,7 +7,7 @@
 		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="false" />
 	</target>
 
-	<target name="task-init">
+	<target name="task-init" if="enable.init">
 		<available file="${source.root.dir}" property="git.exists" />
 		<fail unless="git.exists" message="Git dir not found, is project name correct? ${project.name}" />
 

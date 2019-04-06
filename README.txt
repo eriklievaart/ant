@@ -32,7 +32,7 @@ Examples of such configuration: setting packaging format (jar/war) or skipping a
 Properties can be categorized as follows
 
 1) allowing certain tasks to be run. These are intended as a safeguard against accidentally running the wrong task and take (true|false):
-+ enable.init => creates java folder structure, not setting this property ensures folders are not created for non-java projects
++ enable.java => creates java folder structure, not setting this property ensures folders are not created for non-java projects
 + enable.jar => allows the project to be built as a jar file
 + enable.war => allows the project to be built as a war file
 + enable.osgi => create separate osgi bundles for subpackages

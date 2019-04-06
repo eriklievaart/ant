@@ -57,4 +57,6 @@
 	<target name="master-osgi-tmp" depends="master-osgi-bundles, task-osgi-tmp" />
 	<target name="master-osgi-deploy" depends="master-osgi-bundles, task-osgi-deploy" />
 
+	<target name="master-zip" depends="task-clean, task-zip-init, task-zip" />
+
 </project>

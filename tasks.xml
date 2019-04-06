@@ -7,7 +7,7 @@
 		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="false" />
 	</target>
 
-	<target name="task-init" if="enable.init">
+	<target name="task-init" if="enable.java">
 		<available file="${source.root.dir}" property="git.exists" />
 		<fail unless="git.exists" message="Git dir not found, is project name correct? ${project.name}" />
 
@@ -449,6 +449,19 @@
 			<arg value="-f" />
 			<arg value="${webserver.dir}" />
 		</exec>
+	</target>
+
+	<target name="task-zip-init">
+		<fail unless="enable.zip" />
+		<mkdir dir="${build.dist.dir}" />
+		<mkdir dir="${source.main.zip.dir}" />
+	</target>
+
+	<target name="task-zip">
+		<fail unless="enable.zip" />
+		<echo>packing zip out of ${source.main.zip.dir}</echo>
+		<delete file="${build.zip.file}" />
+		<zip destfile="${build.zip.file}" basedir="${source.main.zip.dir}" />
 	</target>
 
 </project>

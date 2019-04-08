@@ -7,7 +7,7 @@
 		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="false" />
 	</target>
 
-	<target name="task-init" if="enable.java">
+	<target name="task-java-init" if="enable.java">
 		<available file="${source.root.dir}" property="git.exists" />
 		<fail unless="git.exists" message="Git dir not found, is project name correct? ${project.name}" />
 

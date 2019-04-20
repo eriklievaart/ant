@@ -46,14 +46,14 @@
 	<target name="master-jar" depends="master-build, task-track-buildnr, task-jar, task-source-jar" />
 	<target name="master-run" depends="master-main-compile, task-run" />
 	<target name="master-run-jar" depends="master-jar, task-run-jar" />
-	<target name="master-install" depends="master-jar, task-install" />
+	<target name="master-install" depends="master-jar, task-install, task-mock-init, task-mock" />
 	<target name="master-jar-deploy" depends="master-jar, task-deploy-jar, task-deploy-script" />
 
 	<target name="master-war" depends="master-build, task-war" />
 	<target name="master-war-deploy" depends="master-war, task-deploy-war" />
 
 	<target name="master-osgi-bundles" depends="master-build, task-track-buildnr, task-osgi-manifest, task-osgi-bundles" />
-	<target name="master-osgi-install" depends="master-osgi-bundles, task-osgi-install" />
+	<target name="master-osgi-install" depends="master-osgi-bundles, task-mock-init, task-mock, task-osgi-install" />
 	<target name="master-osgi-tmp" depends="master-osgi-bundles, task-osgi-tmp" />
 	<target name="master-osgi-deploy" depends="master-osgi-bundles, task-osgi-deploy" />
 

@@ -343,6 +343,23 @@
 		</jar>
 	</target>
 
+	<target name="task-mock-init">
+		<available file="${source.test.java.dir}/${build.mock.path}" type="dir" property="enable.mock"/>
+	</target>
+
+	<target name="task-mock" if="enable.mock">
+		<jar destfile="${build.mock.jar}">
+			<fileset dir="${build.test.classes.dir}">
+				<include name="${build.mock.include}" />
+			</fileset>
+		</jar>	
+		<jar destfile="${build.mock.src.jar}">
+			<fileset dir="${source.test.java.dir}">
+				<include name="${build.mock.include}" />
+			</fileset>
+		</jar>
+	</target>
+
 	<target name="task-osgi-bundles">
 		<fail unless="enable.osgi" />
 		<script language="javascript">

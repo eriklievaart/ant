@@ -4,7 +4,7 @@
 	<import file="${source.ant.macros.file}" />
 
 	<target name="task-clean">
-		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="false" />
+		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="true" />
 	</target>
 
 	<target name="task-java-init" if="enable.java">
@@ -35,13 +35,13 @@
 	</target>
 
 	<target name="task-test-init">
-        <script language="javascript">
-            tests = new java.io.File(project.getProperty("source.test.java.dir"));
-            if (tests.list().length == 0) {
-                java.lang.System.out.println('no tests: skip.test=true');
-                project.setProperty("skip.test", true);
-            }
-        </script>
+		<script language="javascript">
+		    tests = new java.io.File(project.getProperty("source.test.java.dir"));
+		    if (tests.list().length == 0) {
+		        java.lang.System.out.println('no tests: skip.test=true');
+		        project.setProperty("skip.test", true);
+		    }
+		</script>
 	</target>
 
 	<target name="task-track-buildnr">
@@ -289,6 +289,23 @@
 		<copy file="${build.war.file}" tofile="/tmp/ROOT.war" verbose="true" />
 	</target>
 
+	<target name="task-mock-init">
+		<available file="${source.test.java.dir}/${build.mock.path}" type="dir" property="enable.mock"/>
+	</target>
+
+	<target name="task-mock" if="enable.mock">
+		<jar destfile="${build.mock.jar}">
+			<fileset dir="${build.test.classes.dir}">
+				<include name="${build.mock.include}" />
+			</fileset>
+		</jar>	
+		<jar destfile="${build.mock.src.jar}">
+			<fileset dir="${source.test.java.dir}">
+				<include name="${build.mock.include}" />
+			</fileset>
+		</jar>
+	</target>
+
 	<target name="task-osgi-manifest">
 		<ws main="com.eriklievaart.ws.boot.Manifest">
 			<arguments>
@@ -339,23 +356,6 @@
 			</fileset>
 			<fileset dir="${source.main.resource.dir}">
 				<include name="${bundle.name}/**" />
-			</fileset>
-		</jar>
-	</target>
-
-	<target name="task-mock-init">
-		<available file="${source.test.java.dir}/${build.mock.path}" type="dir" property="enable.mock"/>
-	</target>
-
-	<target name="task-mock" if="enable.mock">
-		<jar destfile="${build.mock.jar}">
-			<fileset dir="${build.test.classes.dir}">
-				<include name="${build.mock.include}" />
-			</fileset>
-		</jar>	
-		<jar destfile="${build.mock.src.jar}">
-			<fileset dir="${source.test.java.dir}">
-				<include name="${build.mock.include}" />
 			</fileset>
 		</jar>
 	</target>
@@ -446,6 +446,25 @@
 			<arg value="${osgi.jar}" />
 		</exec>
 		<delete file="${osgi.pid}" />
+	</target>
+
+	<target name="task-dist-copy" if="dist.copy.from">
+		<copy todir="${build.zip.dir}" verbose="true">
+			<fileset dir="${dist.copy.from}" />
+		</copy>
+	</target>
+
+	<target name="task-osgi-dist">
+		<copy todir="${build.zip.dir}" verbose="true">
+			<fileset dir="${source.main.zip.dir}" />
+		</copy>
+		<copy todir="${build.zip.osgi.dir}" verbose="true">
+			<fileset dir="${project.lib.compile.dir}" />
+		</copy>
+		<copy todir="${build.zip.bundle.dir}" verbose="true">
+			<fileset dir="${project.lib.bundle.dir}" />
+		</copy>
+		<zip destfile="${build.zip.file}" basedir="${build.zip.dir}" />
 	</target>
 
 	<target name="task-webserver-start">

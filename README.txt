@@ -38,6 +38,7 @@ Properties can be categorized as follows
 + enable.osgi => create separate osgi bundles for subpackages
 + enable.install => allows the project to be stored in the local repository
 + enable.application => allows the project to be deployed as an application locally
++ enable.mock => create a separate bundle for the com.eriklievaart.[project].mock package in the src/test/java folder
 
 2) skipping tasks
 + skip.test => do not run (unit & integration) tests 

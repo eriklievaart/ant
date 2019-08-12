@@ -97,7 +97,7 @@
 		<compile source="${source.main.java.dir}" classes="${build.main.classes.dir}" path="${toString:main.compile.path}" />
 	</target>
 
-	<target name="task-test-compile">
+	<target name="task-test-compile" unless="skip.test.compile">
 		<compile source="${source.test.java.dir}" classes="${build.test.classes.dir}" path="${toString:test.compile.path}" />
 	</target>
 

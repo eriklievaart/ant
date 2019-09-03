@@ -13,9 +13,13 @@
 	</module>
 	
 		
-
-
 	<module name="TreeWalker">
+
+		<module name="SuppressionCommentFilter">
+		    <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)"/>
+		    <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)"/>
+		    <property name="checkFormat" value="$1"/>
+		</module>
 
 		<property name="tabWidth" value="4" />
 
@@ -72,9 +76,6 @@
 			<property name="ignoreCase" value="true" />
 		</module>
 		<module name="InnerAssignment" />
-		<module name="MultipleStringLiterals">
-			<property name="allowedDuplicates" value="2" />
-		</module>
 		<module name="MultipleVariableDeclarations" />
 		<module name="NestedForDepth">
 			<property name="max" value="1" />

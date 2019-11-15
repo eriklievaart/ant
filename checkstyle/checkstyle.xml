@@ -9,7 +9,7 @@
 
 	<module name="FileLength">
 		<property name="fileExtensions" value="java" />
-		<property name="max" value="250" />
+		<property name="max" value="400" />
 	</module>
 	
 		

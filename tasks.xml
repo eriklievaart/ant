@@ -211,20 +211,32 @@
 		<delete dir="${deploy.local.lib.dir}" excludes="**/*.jar" includeemptydirs="true" />
 	</target>
 
-	<target name="task-deploy-script">
+	<target name="task-deploy-sh">
 		<property name="project.main" value="${project.default.main}" />
-		<copy tofile="${deploy.local.script.file}" overwrite="true">
-			<fileset file="${source.ant.script.file}" />
-		</copy>
 		<echo>main method: ${project.main}</echo>
-		<replace file="${deploy.local.script.file}" token="@project@" value="${project.name}">
+		<copy tofile="${deploy.local.sh.file}" overwrite="true" verbose="true">
+			<fileset file="${source.ant.sh.file}" />
+		</copy>
+		<replace file="${deploy.local.sh.file}">
 			<replacefilter token="@project@" value="${project.name}" />
 			<replacefilter token="@main.class@" value="${project.main}" />
 		</replace>
-		<chmod file="${deploy.local.script.file}" perm="+x" />
+		<chmod file="${deploy.local.sh.file}" perm="+x" />
 		<copy todir="${deploy.local.project.dir}" verbose="true">
 			<fileset dir="${build.zip.dir}" />
 		</copy>
+	</target>
+
+	<target name="task-deploy-bat" if="os.windows">
+		<property name="project.main" value="${project.default.main}" />
+		<copy tofile="${deploy.local.bat.file}" overwrite="true" verbose="true">
+			<fileset file="${source.ant.bat.file}" />
+		</copy>
+		<replace file="${deploy.local.bat.file}">
+			<replacefilter token="@project@" value="${project.name}" />
+			<replacefilter token="@main.class@" value="${project.main}" />
+			<replacefilter token="@home@" value="${user.home}" />
+		</replace>
 	</target>
 
 	<target name="task-generate" if="generator.class" unless="skip.generate">

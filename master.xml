@@ -4,6 +4,9 @@
 	<property file="master.properties" />
 	<import file="${source.ant.tasks.file}" />
 	<property file="${source.ant.properties.file}" />
+    <condition property="os.windows">
+        <os family="windows" />
+    </condition>
 
 
 	<path id="main.compile.path">
@@ -47,7 +50,7 @@
 	<target name="master-run" depends="master-main-compile, task-run" />
 	<target name="master-run-jar" depends="master-jar, task-run-jar" />
 	<target name="master-install" depends="master-jar, task-install, task-mock-init, task-mock" />
-	<target name="master-jar-deploy" depends="master-jar, task-deploy-jar, task-deploy-script" />
+	<target name="master-jar-deploy" depends="master-jar, task-deploy-jar, task-deploy-sh, task-deploy-bat" />
 
 	<target name="master-war" depends="master-build, task-war" />
 	<target name="master-war-deploy" depends="master-war, task-deploy-war" />

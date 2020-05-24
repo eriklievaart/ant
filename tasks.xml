@@ -319,6 +319,7 @@
 	</target>
 
 	<target name="task-osgi-manifest">
+		<fail unless="enable.osgi" />
 		<ws main="com.eriklievaart.ws.boot.Manifest">
 			<arguments>
 				<arg value="${project.name}" />

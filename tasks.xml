@@ -182,6 +182,8 @@
 				<attribute name="Build-Date" value="${DATENOW}" />
 				<attribute name="Build-Number" value="${build.number}" />
 				<attribute name="Main-Class" value="${project.main}" />
+				<attribute name="Bundle-Name" value="${source.main.pkg}" />
+				<attribute name="Bundle-SymbolicName" value="${source.main.pkg}" />
 			</manifest>
 		</jar>
 	</target>

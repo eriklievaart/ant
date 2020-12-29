@@ -60,7 +60,7 @@
 			<echo level="info">java version ${compile.java.version}</echo>
 
 			<mkdir dir="${build.main.classes.dir}" />
-			<javac srcdir="@{source}" includes="**/*.java" destdir="@{classes}" source="${compile.java.version}" target="${compile.java.version}" debug="true" debuglevel="lines,vars,source" includeantruntime="false" fork="false">
+			<javac srcdir="@{source}" includes="**/*.java" destdir="@{classes}" source="${compile.java.version}" target="${compile.java.version}" debug="true" debuglevel="lines,vars,source" includeantruntime="false" fork="false" encoding="UTF-8">
 				<classpath path="@{path}" />
 			</javac>
 		</sequential>

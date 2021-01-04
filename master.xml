@@ -34,7 +34,6 @@
 		<path refid="test.compile.path" />
 		<path location="${build.test.classes.dir}" />
 		<fileset dir="${project.lib.test.dir}" />
-		<fileset file="${testrunner.jar.file}" />
 	</path>
 
 	<target name="master-clean" depends="task-clean" />

@@ -12,6 +12,7 @@
 		<fail unless="git.exists" message="Git dir not found, is project name correct? ${project.name}" />
 
 		<mkdir dir="${backup.project.dir}" />
+		<mkdir dir="${tool.checkstyle.dir}" />
 		<mkdir dir="${buildnumber.dir}" />
 		<mkdir dir="${source.main.java.dir}" />
 		<mkdir dir="${source.main.run.dir}" />
@@ -141,6 +142,7 @@
 	</target>
 
 	<target name="task-checkstyle" unless="skip.checkstyle">
+		<get src="${tool.checkstyle.url}" dest="${tool.checkstyle.jar}" skipexisting="true" />
 		<echo level="info">config: ${tool.checkstyle.config.file}</echo>
 		<echo level="info">executable: ${tool.checkstyle.jar}</echo>
 		<property name="location" location="${tool.checkstyle.config.file}" />

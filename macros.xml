@@ -37,12 +37,10 @@
 		<attribute name="main" />
 		<element name="arguments" />
 		<sequential>
-			<echo level="info">executable: ${tool.dependencies.jar}</echo>
+			<echo level="info">executable: ${tool.ws.jar}</echo>
 			<echo>main: @{main}</echo>
-
-			<require file="${tool.dependencies.jar}" />
-
-			<java classname="@{main}" fork="yes" failonerror="true" classpath="${tool.dependencies.jar}">
+			<get src="${tool.ws.url}" dest="${tool.ws.jar}" skipexisting="true" />
+			<java classname="@{main}" fork="yes" failonerror="true" classpath="${tool.ws.jar}">
 				<arguments />
 			</java>
 		</sequential>

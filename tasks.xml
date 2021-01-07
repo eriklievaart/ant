@@ -12,7 +12,6 @@
 		<fail unless="git.exists" message="Git dir not found, is project name correct? ${project.name}" />
 
 		<mkdir dir="${backup.project.dir}" />
-		<mkdir dir="${tool.checkstyle.dir}" />
 		<mkdir dir="${buildnumber.dir}" />
 		<mkdir dir="${source.main.java.dir}" />
 		<mkdir dir="${source.main.run.dir}" />
@@ -23,13 +22,15 @@
 		<mkdir dir="${source.test.java.dir}" />
 		<mkdir dir="${source.test.run.dir}" />
 		<mkdir dir="${source.test.resource.dir}" />
+		<mkdir dir="${build.test.classes.dir}" />
+		<mkdir dir="${build.generated.dir}" />
+		<mkdir dir="${tool.ws.dir}" />
+		<mkdir dir="${tool.checkstyle.dir}" />
 		<mkdir dir="${project.lib.run.dir}" />
 		<mkdir dir="${project.lib.compile.dir}" />
 		<mkdir dir="${project.lib.bundle.dir}" />
 		<mkdir dir="${project.lib.provided.dir}" />
 		<mkdir dir="${project.lib.test.dir}" />
-		<mkdir dir="${build.test.classes.dir}" />
-		<mkdir dir="${build.generated.dir}" />
 
 		<touch file="${source.ant.properties.file}"/>
 		<touch file="${source.dependencies.file}"/>

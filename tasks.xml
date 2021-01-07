@@ -205,7 +205,9 @@
 		<require file="${build.jar.file}" message="jar file not found: ${build.jar.file}, did you build the project?" />
 
 		<echo>deploying to: ${deploy.local.project.dir}</echo>
-		<copy todir="${deploy.local.project.dir}" verbose="true">
+		<property name="deploy.override.jar.dir" value="${deploy.local.project.dir}" />
+		<echo>jar dir after optional override: ${deploy.override.jar.dir}</echo>
+		<copy todir="${deploy.override.jar.dir}" verbose="true">
 			<fileset file="${build.jar.file}" />
 		</copy>
 		<copy todir="${deploy.local.lib.dir}" verbose="true">

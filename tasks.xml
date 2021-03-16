@@ -435,6 +435,7 @@
 		<fail unless="enable.osgi" message="Project ${project.name} not configured as osgi project! (property 'enable.application' not set)" />
 		<echo>deploying from ${build.zip.dir} to: ${deploy.local.project.dir}</echo>
 
+		<mkdir dir="${deploy.local.project.dir}" />
 		<copy todir="${deploy.local.project.dir}" verbose="true">
 			<fileset dir="${build.zip.dir}" excludes="**/*-src.jar" />
 		</copy>

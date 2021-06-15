@@ -7,6 +7,10 @@
 		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="true" />
 	</target>
 
+	<target name="task-undeploy">
+		<delete dir="${deploy.local.project.dir}"/>
+	</target>
+
 	<target name="task-java-init" if="enable.java">
 		<available file="${source.root.dir}" property="git.exists" />
 		<fail unless="git.exists" message="Git dir not found, is project name correct? ${project.name}" />
@@ -440,9 +444,9 @@
 			<fileset dir="${build.zip.dir}" excludes="**/*-src.jar" />
 		</copy>
 		<copy todir="${deploy.local.bundle.dir}" verbose="true">
-			<fileset dir="${project.lib.compile.dir}" />
 			<fileset dir="${project.lib.bundle.dir}" />
 		</copy>
+		<chmod dir="${deploy.local.project.dir}" includes="**/*.sh" perm="+x" />
 	</target>
 
 	<target name="task-osgi-start">

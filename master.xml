@@ -61,5 +61,6 @@
 	<target name="master-osgi-dist" depends="task-clean, task-resolve, task-dist-copy, task-osgi-dist" />
 
 	<target name="master-zip" depends="task-clean, task-zip-init, task-zip" />
+	<target name="master-undeploy" depends="master-clean, task-undeploy" />
 
 </project>

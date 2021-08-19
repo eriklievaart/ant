@@ -52,6 +52,7 @@ Properties can be categorized as follows
 
 4) override defaults
 project.main => specify main class to use when running the application
+deploy.jvm.opts => specify jvm options to activate when running application
 
 Design
 The build file is split into the following files

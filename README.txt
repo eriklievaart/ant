@@ -62,3 +62,4 @@ The build file is split into the following files
 + master.properties => single definition of all shared properties (mainly filesystem paths)
 
 
+

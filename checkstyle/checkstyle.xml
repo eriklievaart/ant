@@ -11,8 +11,8 @@
 		<property name="fileExtensions" value="java" />
 		<property name="max" value="400" />
 	</module>
-	
-		
+
+
 	<module name="TreeWalker">
 
 		<module name="SuppressionCommentFilter">
@@ -38,7 +38,7 @@
 		<module name="EmptyCatchBlock">
 			<property name="exceptionVariableName" value="ignore"/>
 		</module>
-		
+
 
 		<!-- Class Design -->
 		<module name="InnerTypeLast" />
@@ -47,7 +47,7 @@
 		<module name="ThrowsCount">
 			<property name="max" value="2" />
 		</module>
-	
+
 
 		<!-- Coding -->
 		<module name="CovariantEquals" />
@@ -208,8 +208,8 @@
 			<property name="ignoreOverriddenMethods" value="true" />
 			<property name="tokens" value="METHOD_DEF" />
 		</module>
-		
-		
+
+
 		<!-- whitespace -->
 		<module name="EmptyForInitializerPad" />
 		<module name="EmptyForIteratorPad" />

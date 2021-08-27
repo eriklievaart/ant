@@ -3,6 +3,13 @@
 
 	<import file="${source.ant.macros.file}" />
 
+	<!-- package names cannot contain '-' -->
+	<regexreplace replace="-.*" with="" in="project.name" property="project.short.name" />
+	<property name="source.main.pkg" value="com.eriklievaart.${project.short.name}" />
+	<tokenreplace replace="." with="/" in="source.main.pkg" property="source.main.pkg.path" />
+	<property name="source.main.pkg.dir" value="${source.main.java.dir}/${source.main.pkg.path}" />
+	<property name="project.main" value="${source.main.pkg}.boot.Main" />
+
 	<target name="task-clean">
 		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="true" />
 	</target>
@@ -182,7 +189,6 @@
 		<echo>packing jar out of ${build.main.classes.dir}</echo>
 
 		<!-- override this property in ant.properties if using a different main class -->
-		<property name="project.main" value="${project.default.main}" />
 
 		<jar destfile="${build.jar.file}" basedir="${build.main.classes.dir}">
 			<manifest>
@@ -223,7 +229,7 @@
 	</target>
 
 	<target name="task-deploy-sh">
-		<property name="project.main" value="${project.default.main}" />
+		<property name="deploy.local.sh.file" value="${deploy.local.bin.dir}/${project.short.name}" />
 		<property name="deploy.jvm.opts" value="" />
 		<echo>opts ${deploy.jvm.opts} main method: ${project.main}</echo>
 		<copy tofile="${deploy.local.sh.file}" overwrite="true" verbose="true">
@@ -241,7 +247,6 @@
 	</target>
 
 	<target name="task-deploy-bat" if="os.windows">
-		<property name="project.main" value="${project.default.main}" />
 		<property name="deploy.jvm.opts" value="" />
 		<copy tofile="${deploy.local.bat.file}" overwrite="true" verbose="true">
 			<fileset file="${source.ant.bat.file}" />
@@ -263,7 +268,6 @@
 	</target>
 
 	<target name="task-run">
-		<property name="project.main" value="${project.default.main}" />
 		<run>
 			<java-children>
 				<classpath refid="main.run.path" />
@@ -325,7 +329,7 @@
 			<fileset dir="${build.test.classes.dir}">
 				<include name="${build.mock.include}" />
 			</fileset>
-		</jar>	
+		</jar>
 		<jar destfile="${build.mock.src.jar}">
 			<fileset dir="${source.test.java.dir}">
 				<include name="${build.mock.include}" />
@@ -352,7 +356,7 @@
 		<echo>building bundle ${project.name}-${bundle.name}</echo>
 		<property name="subpackage" value="${source.main.pkg}.${bundle.name}" />
 		<property name="activator" value="${subpackage}.Activator" />
-		<tokenreplace property="subdir" in="subpackage" replace="." with="/" />
+		<tokenreplace replace="." with="/" in="subpackage" property="subdir" />
 		<property name="jar" value="${build.bundle.dir}/${full.name}.jar" />
 		<property name="manifest" value="${build.manifest.dir}/${full.name}.txt" />
 
@@ -402,11 +406,11 @@
 				}
 				for(i=0; i<children.length; i++) {
 					var child = children[i];
-		
+
 					if(child.isDirectory()) {
 					var t = project.createTask("antcall");
 					    t.setTarget("task-osgi-bundle");
-		
+
 					    var p = t.createParam();
 					    p.setName("bundle.name");
 					    p.setValue(child.getName());

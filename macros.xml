@@ -15,6 +15,21 @@
 		</sequential>
 	</macrodef>
 
+	<macrodef name="regexreplace">
+		<attribute name="replace" />
+		<attribute name="with" />
+		<attribute name="in" />
+		<attribute name="property" />
+		<sequential>
+			<loadresource property="@{property}">
+				<propertyresource name="@{in}" />
+				<filterchain>
+					<replaceregex pattern="@{replace}" replace="@{with}" flags="g" />
+				</filterchain>
+			</loadresource>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="tokenreplace">
 		<attribute name="property" />
 		<attribute name="in" />

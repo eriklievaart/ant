@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="master">
 
-	<property file="master.properties" />
-	<import file="${source.ant.tasks.file}" />
+	<property file="config.properties" />
 	<property file="${source.ant.properties.file}" />
+	<import file="${source.ant.tasks.file}" />
     <condition property="os.windows">
         <os family="windows" />
     </condition>

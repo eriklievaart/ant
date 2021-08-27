@@ -24,7 +24,7 @@ Applications are deployed in [user_home]/Applications/[name]/[name].jar
 Its dependencies will be deployed in [user_home]/Applications/[name]/lib
 Locations may change in the future and the examples above may be out of date.
 
-Ant uses properties to configure paths and most of the proerties are configured in master.properties.
+Ant uses properties to configure paths and most of the properties are configured in config.properties.
 This is the central configuration file shared by all projects.
 Every project has a ant.properties file which is used for project specific configuration.
 Examples of such configuration: setting packaging format (jar/war) or skipping a task.
@@ -41,7 +41,7 @@ Properties can be categorized as follows
 + enable.mock => create a separate bundle for the com.eriklievaart.[project].mock package in the src/test/java folder
 
 2) skipping tasks
-+ skip.test => do not run (unit & integration) tests 
++ skip.test => do not run (unit & integration) tests
 + skip.checkstyle => do not verify coding conventions
 + skip.preprocess => do not run preprocess source fixes (requires ws.jar to be installed)
 + skip.resolve => do not resolve dependencies (requires ws.jar to be installed)
@@ -59,7 +59,7 @@ The build file is split into the following files
 + master.xml => main entry point into the build file. Specifies tasks that run their dependencies in order.
 + tasks.xml => tasks without dependencies, tasks may fail if their dependencies are not run, if possible, use master.xml instead
 + macros.xml => defines reusable code snippets, to make tasks more succinct
-+ master.properties => single definition of all shared properties (mainly filesystem paths)
++ config.properties => single definition of all shared properties (mainly filesystem paths)
 
 
 

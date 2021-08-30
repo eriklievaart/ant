@@ -48,12 +48,12 @@
 	</target>
 
 	<target name="task-test-init">
-		<script language="javascript">
-		    tests = new java.io.File(project.getProperty("source.test.java.dir"));
-		    if (tests.list().length == 0) {
-		        java.lang.System.out.println('no tests: skip.test=true');
-		        project.setProperty("skip.test", true);
-		    }
+		<script language="beanshell">
+			tests = new java.io.File(project.getProperty("source.test.java.dir"));
+			if (tests.list().length == 0) {
+				java.lang.System.out.println("no tests: skip.test=true");
+				project.setProperty("skip.test", "true");
+			}
 		</script>
 	</target>
 
@@ -99,11 +99,11 @@
 		<delete dir="${javacc.output}" verbose="true" />
 		<mkdir dir="${javacc.output}" />
 		<echo>Running javacc ${source.main.javacc.file} in ${javacc.output}</echo>
-        <copy tofile="${project.lib.javacc.jar.file}">
-            <fileset dir="${project.lib.compile.dir}" includes="javacc-*.jar" />
-        </copy>
+		<copy tofile="${project.lib.javacc.jar.file}">
+			<fileset dir="${project.lib.compile.dir}" includes="javacc-*.jar" />
+		</copy>
 		<javacc target="${source.main.javacc.file}" outputdirectory="${javacc.output}" javacchome="${project.lib.compile.dir}" buildparser="true" buildtokenmanager="true" static="false" />
-        <delete file="${project.lib.javacc.jar.file}" />
+		<delete file="${project.lib.javacc.jar.file}" />
 	</target>
 
 	<target name="task-main-compile">
@@ -394,29 +394,28 @@
 
 	<target name="task-osgi-bundles">
 		<fail unless="enable.osgi" />
-		<script language="javascript">
+		<script language="beanshell">
 			<![CDATA[
-				var path = project.getProperty('source.main.pkg.dir');
+				var path = project.getProperty("source.main.pkg.dir");
 				var dir = new java.io.File(path);
 				java.lang.System.out.println("package root = " + dir);
 				var children = dir.listFiles();
-
-				if(children === null) {
-					children = []; // fix: project doesn't have source code, just bundles
+				if(children == void) {
+					return; // project doesn't have source code, just bundles
 				}
 				for(i=0; i<children.length; i++) {
 					var child = children[i];
 
 					if(child.isDirectory()) {
 					var t = project.createTask("antcall");
-					    t.setTarget("task-osgi-bundle");
+						t.setTarget("task-osgi-bundle");
 
-					    var p = t.createParam();
-					    p.setName("bundle.name");
-					    p.setValue(child.getName());
-					    t.perform();
+						var p = t.createParam();
+						p.setName("bundle.name");
+						p.setValue(child.getName());
+						t.perform();
 					}
-			    	}
+				}
 			]]>
 		</script>
 	</target>
@@ -481,23 +480,21 @@
 		<delete file="${osgi.pid}" />
 	</target>
 
-	<target name="task-dist-copy" if="dist.copy.from">
-		<copy todir="${build.zip.dir}" verbose="true">
-			<fileset dir="${dist.copy.from}" />
-		</copy>
-	</target>
-
 	<target name="task-osgi-dist">
-		<copy todir="${build.zip.dir}" verbose="true">
-			<fileset dir="${source.main.zip.dir}" />
-		</copy>
-		<copy todir="${build.zip.osgi.dir}" verbose="true">
+		<echo>zip contents: ${build.zip.dir}</echo>
+		<copy todir="${build.zip.bundle.dir}" verbose="true">
 			<fileset dir="${project.lib.compile.dir}" />
 		</copy>
 		<copy todir="${build.zip.bundle.dir}" verbose="true">
 			<fileset dir="${project.lib.bundle.dir}" />
 		</copy>
-		<zip destfile="${build.zip.file}" basedir="${build.zip.dir}" />
+		<copy todir="${build.zip.dir}" verbose="true">
+			<fileset dir="${tool.osgi.dir}" />
+		</copy>
+		<zip destfile="${build.zip.file}">
+			<zipfileset dir="${build.zip.dir}" excludes="*.sh, *.bat" />
+			<zipfileset filemode="755" dir="${build.zip.dir}" includes="*.sh, *.bat" />
+		</zip>
 	</target>
 
 	<target name="task-webserver-start">

@@ -401,10 +401,12 @@
 				java.lang.System.out.println("package root = " + dir);
 				var children = dir.listFiles();
 				if(children == void) {
-					return; // project doesn't have source code, just bundles
+					java.lang.System.out.println("project doesn't have source code, just bundles");
+					return;
 				}
 				for(i=0; i<children.length; i++) {
 					var child = children[i];
+					java.lang.System.out.println("child = " + child);
 
 					if(child.isDirectory()) {
 					var t = project.createTask("antcall");

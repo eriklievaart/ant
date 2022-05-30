@@ -47,7 +47,7 @@
 		<touch file="${source.dependencies.file}"/>
 	</target>
 
-	<target name="task-test-init">
+	<target name="task-test-init" unless="${skip.test}">
 		<script language="beanshell">
 			tests = new java.io.File(project.getProperty("source.test.java.dir"));
 			if (tests.list().length == 0) {

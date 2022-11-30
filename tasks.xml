@@ -188,15 +188,14 @@
 		</tstamp>
 		<echo>packing jar out of ${build.main.classes.dir}</echo>
 
-		<!-- override this property in ant.properties if using a different main class -->
-
 		<jar destfile="${build.jar.file}" basedir="${build.main.classes.dir}">
 			<manifest>
 				<attribute name="Build-Date" value="${DATENOW}" />
 				<attribute name="Build-Number" value="${build.number}" />
-				<attribute name="Main-Class" value="${project.main}" />
 				<attribute name="Bundle-Name" value="${source.main.pkg}" />
 				<attribute name="Bundle-SymbolicName" value="${source.main.pkg}" />
+				<!-- override this property in ant.properties if using a different main class -->
+				<attribute name="Main-Class" value="${project.main}" />
 			</manifest>
 		</jar>
 	</target>

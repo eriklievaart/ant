@@ -380,7 +380,7 @@
 			<zipgroupfileset dir="${project.lib.compile.dir}" includes="*.jar" />
 		</jar>
 
-		<property name="src.jar" value="${build.bundle.dir}/${full.name}-src.jar" />
+		<property name="src.jar" value="${build.bundle.src.dir}/${full.name}-src.jar" />
 		<jar destfile="${src.jar}">
 			<fileset dir="${source.main.java.dir}">
 				<include name="${subdir}/**" />
@@ -490,7 +490,7 @@
 			<fileset dir="${project.lib.bundle.dir}" />
 		</copy>
 		<copy todir="${build.zip.dir}" verbose="true">
-			<fileset dir="${tool.osgi.dir}" />
+			<fileset dir="${tool.osgi.dir}" excludes="*.log,*-src.jar" />
 		</copy>
 		<zip destfile="${build.zip.file}">
 			<zipfileset dir="${build.zip.dir}" excludes="*.sh, *.bat" />

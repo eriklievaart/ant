@@ -58,7 +58,7 @@
 	<target name="master-osgi-install" depends="master-osgi-bundles, task-mock-init, task-mock, task-osgi-install" />
 	<target name="master-osgi-tmp" depends="master-osgi-bundles, task-osgi-tmp" />
 	<target name="master-osgi-deploy" depends="master-osgi-bundles, task-osgi-deploy" />
-	<target name="master-osgi-dist" depends="master-osgi-bundles, task-osgi-dist" />
+	<target name="master-osgi-dist" depends="master-osgi-deploy, task-osgi-dist" />
 
 	<target name="master-zip" depends="task-clean, task-zip-init, task-zip" />
 	<target name="master-undeploy" depends="master-clean, task-undeploy" />

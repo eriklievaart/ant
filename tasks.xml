@@ -431,17 +431,6 @@
 		</ws>
 	</target>
 
-	<target name="task-osgi-tmp">
-		<fail unless="enable.osgi" message="Project ${project.name} not configured as osgi project! (property 'enable.application' not set)" />
-		<echo>deploying from ${build.zip.dir} to: ${osgi.tmp.dir}</echo>
-		<copy todir="${osgi.tmp.dir}" verbose="true">
-			<fileset dir="${build.zip.dir}" excludes="**/*-src.jar"/>
-		</copy>
-		<copy todir="${osgi.tmp.bundle.dir}" verbose="true">
-			<fileset dir="${project.lib.bundle.dir}" />
-		</copy>
-	</target>
-
 	<target name="task-osgi-deploy">
 		<fail unless="enable.application" message="Project ${project.name} not configured as application! (property 'enable.application' not set)" />
 		<fail unless="enable.osgi" message="Project ${project.name} not configured as osgi project! (property 'enable.application' not set)" />

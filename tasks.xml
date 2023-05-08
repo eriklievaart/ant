@@ -9,6 +9,7 @@
 	<tokenreplace replace="." with="/" in="source.main.pkg" property="source.main.pkg.path" />
 	<property name="source.main.pkg.dir" value="${source.main.java.dir}/${source.main.pkg.path}" />
 	<property name="project.main" value="${source.main.pkg}.boot.Main" />
+	<property name="project.sh.file" value="${source.ant.sh.file}" />
 
 	<target name="task-clean">
 		<delete dir="${build.project.dir}" includeemptydirs="true" failonerror="true" />
@@ -232,7 +233,7 @@
 		<property name="deploy.jvm.opts" value="" />
 		<echo>opts ${deploy.jvm.opts} main method: ${project.main}</echo>
 		<copy tofile="${deploy.local.sh.file}" overwrite="true" verbose="true">
-			<fileset file="${source.ant.sh.file}" />
+			<fileset file="${project.sh.file}" />
 		</copy>
 		<replace file="${deploy.local.sh.file}">
 			<replacefilter token="@project@" value="${project.name}" />

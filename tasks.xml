@@ -445,6 +445,11 @@
 			<fileset dir="${project.lib.bundle.dir}" />
 		</copy>
 		<chmod dir="${deploy.local.project.dir}" includes="**/*.sh" perm="+x" />
+		<ws main="com.eriklievaart.ws.boot.OsgiConfig">
+			<arguments>
+				<arg file="${deploy.local.project.dir}" />
+			</arguments>
+		</ws>
 	</target>
 
 	<target name="task-osgi-start">

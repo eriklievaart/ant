@@ -43,9 +43,6 @@
 		<mkdir dir="${project.lib.bundle.dir}" />
 		<mkdir dir="${project.lib.provided.dir}" />
 		<mkdir dir="${project.lib.test.dir}" />
-
-		<touch file="${source.ant.properties.file}"/>
-		<touch file="${source.dependencies.file}"/>
 	</target>
 
 	<target name="task-test-init" unless="${skip.test}">

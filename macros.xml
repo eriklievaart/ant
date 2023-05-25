@@ -54,7 +54,6 @@
 		<sequential>
 			<echo level="info">executable: ${tool.ws.jar}</echo>
 			<echo>main: @{main}</echo>
-			<get src="${tool.ws.url}" dest="${tool.ws.jar}" skipexisting="true" />
 			<run-sys />
 			<java classname="@{main}" fork="yes" failonerror="true" classpath="${tool.ws.jar}">
 				<arguments />

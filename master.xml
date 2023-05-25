@@ -56,6 +56,7 @@
 
 	<target name="osgi-bundles" depends="build, task-track-buildnr, task-osgi-manifest, task-osgi-bundles" />
 	<target name="osgi-install" depends="osgi-bundles, task-mock-init, task-mock, task-osgi-install" />
+	<target name="osgi-resolve" depends="resolve, task-osgi-deploy" />
 	<target name="osgi-deploy" depends="osgi-bundles, task-osgi-deploy" />
 	<target name="osgi-dist" depends="osgi-deploy, task-osgi-dist" />
 

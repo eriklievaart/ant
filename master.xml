@@ -36,30 +36,30 @@
 		<fileset dir="${project.lib.test.dir}" />
 	</path>
 
-	<target name="master-clean" depends="task-clean" />
-	<target name="master-resolve" depends="task-java-init, task-resolve" />
-	<target name="master-main-compile" depends="task-java-init, task-resolve, task-javacc, task-preprocess, task-main-resources, task-main-compile"/>
-	<target name="master-test-compile" depends="master-main-compile, task-test-compile" unless="skip.test" />
-	<target name="master-unit" depends="master-test-compile, task-test-init, task-test-resources, task-unit-tests" unless="skip.test"/>
-	<target name="master-integration" depends="master-unit, task-integration-tests" unless="skip.test"/>
-	<target name="master-validate" depends="master-integration, task-checkstyle, task-daily-backup" description="validate" />
-	<target name="master-build" depends="task-clean, master-validate, task-generate" />
+	<target name="clean" depends="task-clean" />
+	<target name="resolve" depends="task-java-init, task-resolve" />
+	<target name="main-compile" depends="task-java-init, task-resolve, task-javacc, task-preprocess, task-main-resources, task-main-compile"/>
+	<target name="test-compile" depends="main-compile, task-test-compile" unless="skip.test" />
+	<target name="unit" depends="test-compile, task-test-init, task-test-resources, task-unit-tests" unless="skip.test"/>
+	<target name="integration" depends="unit, task-integration-tests" unless="skip.test"/>
+	<target name="validate" depends="integration, task-checkstyle, task-daily-backup" description="validate" />
+	<target name="build" depends="task-clean, validate, task-generate" />
 
-	<target name="master-run" depends="master-main-compile, task-run" />
-	<target name="master-install" depends="master-jar, task-install, task-mock-init, task-mock" />
-	<target name="master-jar" depends="master-build, task-track-buildnr, task-jar, task-source-jar" />
-	<target name="master-jar-deploy" depends="master-jar, task-deploy-jar, task-deploy-sh, task-deploy-bat" />
-	<target name="master-jar-run" depends="master-jar-deploy, task-run-jar" />
+	<target name="run" depends="main-compile, task-run" />
+	<target name="install" depends="jar, task-install, task-mock-init, task-mock" />
+	<target name="jar" depends="build, task-track-buildnr, task-jar, task-source-jar" />
+	<target name="jar-deploy" depends="jar, task-deploy-jar, task-deploy-sh, task-deploy-bat" />
+	<target name="jar-run" depends="jar-deploy, task-run-jar" />
 
-	<target name="master-war" depends="master-build, task-war" />
-	<target name="master-war-deploy" depends="master-war, task-deploy-war" />
+	<target name="war" depends="build, task-war" />
+	<target name="war-deploy" depends="war, task-deploy-war" />
 
-	<target name="master-osgi-bundles" depends="master-build, task-track-buildnr, task-osgi-manifest, task-osgi-bundles" />
-	<target name="master-osgi-install" depends="master-osgi-bundles, task-mock-init, task-mock, task-osgi-install" />
-	<target name="master-osgi-deploy" depends="master-osgi-bundles, task-osgi-deploy" />
-	<target name="master-osgi-dist" depends="master-osgi-deploy, task-osgi-dist" />
+	<target name="osgi-bundles" depends="build, task-track-buildnr, task-osgi-manifest, task-osgi-bundles" />
+	<target name="osgi-install" depends="osgi-bundles, task-mock-init, task-mock, task-osgi-install" />
+	<target name="osgi-deploy" depends="osgi-bundles, task-osgi-deploy" />
+	<target name="osgi-dist" depends="osgi-deploy, task-osgi-dist" />
 
-	<target name="master-zip" depends="task-clean, task-zip-init, task-zip" />
-	<target name="master-undeploy" depends="master-clean, task-undeploy" />
+	<target name="zip" depends="task-clean, task-zip-init, task-zip" />
+	<target name="undeploy" depends="clean, task-undeploy" />
 
 </project>

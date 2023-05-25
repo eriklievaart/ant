@@ -7,14 +7,14 @@ Ant is required to run the build file:
 sudo apt-get install ant
 
 Here is an example of how to run the refactor application:
-ant -f ~/Development/git/ant/master.xml -Dproject.name=refactor master-run
+ant -f ~/Development/git/ant/master.xml -Dproject.name=refactor run
 
 Here is a list of the most common tasks:
-master-run: compile sources and run the application
-master-validate: compile and run all verifications (unit tests, integration tests, checkstyle)
-master-install: validate and install artifact in repo
-master-deploy-jar: validate and update installed version on linux
-master-deploy-war: validate and install application on webserver (local directory)
+run: compile sources and run the application
+validate: compile and run all verifications (unit tests, integration tests, checkstyle)
+install: validate and install artifact in repo
+deploy-jar: validate and update installed version on linux
+deploy-war: validate and install application on webserver (local directory)
 
 
 Configuration

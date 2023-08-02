@@ -239,7 +239,7 @@
 		</replace>
 		<chmod file="${deploy.local.sh.file}" perm="+x" />
 		<copy todir="${deploy.local.project.dir}" verbose="true">
-			<fileset dir="${build.zip.dir}" />
+			<fileset dir="${build.zip.dir}" excludes="**/*-src.jar" />
 		</copy>
 	</target>
 
@@ -436,7 +436,7 @@
 
 		<mkdir dir="${deploy.local.project.dir}" />
 		<copy todir="${deploy.local.project.dir}" verbose="true">
-			<fileset dir="${build.zip.dir}" excludes="**/*-src.jar" />
+			<fileset dir="${build.zip.dir}" excludes="**/*-src.jar, **/*-prod.jar" />
 		</copy>
 		<copy todir="${deploy.local.bundle.dir}" verbose="true">
 			<fileset dir="${project.lib.bundle.dir}" />
@@ -482,7 +482,7 @@
 			<fileset dir="${project.lib.bundle.dir}" />
 		</copy>
 		<copy todir="${build.zip.dir}" verbose="true">
-			<fileset dir="${tool.osgi.dir}" excludes="*.log,*-src.jar" />
+			<fileset dir="${tool.osgi.dir}" includes="**/*.jar *.sh *.bat" />
 		</copy>
 		<zip destfile="${build.zip.file}">
 			<zipfileset dir="${build.zip.dir}" excludes="*.sh, *.bat" />

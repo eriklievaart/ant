@@ -447,6 +447,10 @@
 				<arg file="${deploy.local.project.dir}" />
 			</arguments>
 		</ws>
+		<replace file="${deploy.local.osgi.properties.file}">
+			<replacefilter token="@home@" value="${user.home}" />
+			<replacefilter token="@project@" value="${project.name}" />
+		</replace>
 	</target>
 
 	<target name="task-osgi-start">
